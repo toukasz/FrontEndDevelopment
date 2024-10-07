@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+    <title>Drum Machine</title>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <link rel='stylesheet' href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+</head>
+<style>
+</style>
+<body>
+<div
+    class='container d-flex justify-content-center align-items-center'
+    style='height: 100vh;'
+>
+<div
+    id='drum-machine'
+    class='row'
+    style='width: 200px;'
+>
+    <div
+        id='display'
+        class='card col-12'
+        style='text-align: center;'
+    > Hello!
+    </div>
+    <div
+        id='buttonQ'
+        class='drum-pad col-4 btn btn-light'
+        onclick='audio("Q")'
+    > Q <audio id='Q'
+            class='clip'
+            src='https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-1.mp3'
+        ></audio>
+    </div>
+    <div id='buttonW'
+        class='drum-pad col-4 btn btn-light'
+        onclick='audio("W")'
+    > W <audio id='W'
+            class='clip'
+            src='https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-2.mp3'
+        ></audio>
+    </div>
+    <div id='buttonE'
+        class='drum-pad col-4 btn btn-light'
+        onclick='audio("E")'
+    > E <audio id='E'
+            class='clip'
+            src='https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-3.mp3'
+        ></audio>
+    </div>
+    <div id='buttonA'
+        class='drum-pad col-4 btn btn-light'
+        onclick='audio("A")'
+    > A <audio id='A'
+            class='clip'
+            src='https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-4_1.mp3'
+        ></audio>
+    </div>
+    <div id='buttonS'
+        class='drum-pad col-4 btn btn-light'
+        onclick='audio("S")'
+    > S <audio id='S'
+            class='clip'
+            src='https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-6.mp3'
+        ></audio>
+    </div>
+    <div id='buttonD'
+        class='drum-pad col-4 btn btn-light'
+        onclick='audio("D")'
+    > D <audio id='D'
+            class='clip'
+            src='https://cdn.freecodecamp.org/testable-projects-fcc/audio/Dsc_Oh.mp3'
+        ></audio>
+    </div>
+    <div id='buttonZ'
+        class='drum-pad col-4 btn btn-light'
+        onclick='audio("Z")'
+    > Z <audio id='Z'
+            class='clip'
+            src='https://cdn.freecodecamp.org/testable-projects-fcc/audio/Kick_n_Hat.mp3'
+        ></audio>
+    </div>
+    <div id='buttonX'
+        class='drum-pad col-4 btn btn-light'
+        onclick='audio("X")'
+    > X <audio id='X'
+            class='clip'
+            src='https://cdn.freecodecamp.org/testable-projects-fcc/audio/RP4_KICK_1.mp3'
+        ></audio>
+    </div>
+    <div id='buttonC'
+        class='drum-pad col-4 btn btn-light'
+        onclick='audio("C")'
+    > C <audio id='C'
+            class='clip'
+            src='https://cdn.freecodecamp.org/testable-projects-fcc/audio/Cev_H2.mp3'
+        ></audio>
+    </div>
+</div>
+</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+<script>
+const audio = key => {
+    const i = keys.findIndex(item => item == key);
+    $(`#display`).text(names[i]);
+    $(`#${key}`)[0].currentTime = 0;
+    $(`#${key}`)[0].play();
+};
+const keys = ['Q', 'W', 'E', 'A', 'S', 'D', 'Z', 'X', 'C'];
+const names = ['Heater 1', 'Heater 2', 'Heater 3', 'Heater 4', 'Clap', 'Open-HH', "Kick-n'-Hat", 'Kick', 'Closed-HH'];
+const keypress = key => (keys.join().match(key)) ? audio(key) : null ;
+$(document).keydown(event => keypress(event.key.toUpperCase()));
+</script>
+</html>
