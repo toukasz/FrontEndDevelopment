@@ -38,7 +38,7 @@
             <div id='percent'
                 class='col btn btn-light border me-1'
             > <i class="bi bi-percent"></i> </div>
-            <div id='division'
+            <div id='divide'
                 class='col btn btn-light border'
             > ÷ </div>
         </div>
@@ -104,19 +104,23 @@
 </div>
 </body>
 <script src='https://code.jquery.com/jquery-3.7.1.slim.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjs/13.1.1/math.min.js'></script>
+<!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjs/13.1.1/math.min.js'></script> -->
 <script>
 let chunk = ['0'];
 let instr = [];
+
 const print = () => {
     $('#display').text(chunk.join(''));
     $('#info').text(instr.join(''));
 }
+
 const input = n => {
+    if (ans) { ans = false; instr = []; }
     chunk.push(n);
     if (chunk.length > 1 && chunk.at(0) == '0' && chunk.at(1) != '.') chunk.shift();
     print();
 };
+
 $('#zero')  .click(() => input('0'));
 $('#one')   .click(() => input('1'));
 $('#two')   .click(() => input('2'));
@@ -129,34 +133,90 @@ $('#eight') .click(() => input('8'));
 $('#nine')  .click(() => input('9'));
 
 let point = false;
-$('#decimal').click(() => {
-    if (point) return;
-    point = true;
-    input('.');
-});
+
+const decimal = () => { if (point) return; point = true; input('.'); };
+$('#decimal').click(decimal);
+
 const clear = () => {
     point = false;
-    chunk = [];
+    instr = [];
+    chunk = ['0'];
     print();
 };
-$('#clear').click(() => {
-    clear();
-    instr
-});
 
+$('#clear').click(clear);
+
+let ans = false;
 const ops = ['+', '-', '*', '/']
 const op = type => {
-    instr.push(...chunk, type)
+    if (ans) ans = false;
+    if (type == '-' && chunk.at(0) == '0' && ops.indexOf(instr.at(-1)) > -1 && ops.indexOf(instr.at(-2)) < 0) { chunk.shift(); }
+    else if (chunk.at(0) == '0' && ops.indexOf(instr.at(-1)) > -1 && ops.indexOf(instr.at(-2)) > -1) { instr.pop(); instr.pop(); chunk.shift(); }
+    else if (chunk.length == 1 && chunk.at(0) == '0') { instr.pop(); chunk.shift(); }
+    instr.push(...chunk, type);
     chunk = [type];
     print();
     point = false;
-    chunk = [];
+    chunk = ['0'];
 };
 
-$('#add').click(() => op('+'));
-$('#subtract').click(() => op('-'));
-$('#multiply').click(() => op('*'));
-$('#division').click(() => op('/'));
+$('#add')       .click(() => op('+'));
+$('#subtract')  .click(() => op('-'));
+$('#multiply')  .click(() => op('*'));
+$('#divide')    .click(() => op('/'));
+
+const equals = () => {
+    instr.push(...chunk);
+    const temp = eval(instr.join('')).toString().split('');
+    chunk = temp;
+    instr.push('=');
+    print();
+    point = false;
+    chunk = [];
+    instr = temp;
+    ans = true;
+};
+$('#equals').click(equals);
+
+const percent = () => {
+    if (ans) { ans = false; chunk = instr; instr = []; };
+    chunk = eval(chunk.join('') + '*.01').toString().split('');
+    print();
+};
+const plusminus = () => {
+    if (ans) { ans = false; chunk = instr; instr = []; };
+    chunk = eval(chunk.join('') + '*-1').toString().split('');
+    print();
+};
+$('#percent').click(percent);
+$('#plus-minus').click(plusminus);
+
+$(document).keydown(event => {
+    switch (event.key) {
+        case ('0'): input('0'); break;
+        case ('1'): input('1'); break;
+        case ('2'): input('2'); break;
+        case ('3'): input('3'); break;
+        case ('4'): input('4'); break;
+        case ('5'): input('5'); break;
+        case ('6'): input('6'); break;
+        case ('7'): input('7'); break;
+        case ('8'): input('8'); break;
+        case ('9'): input('9'); break;
+
+        case ('+'): op('+'); break;
+        case ('-'): op('-'); break;
+        case ('*'): op('*'); break;
+        case ('/'): op('/'); break;
+
+        case ('.'): decimal(); break;
+        case ('%'): percent(); break;
+        case ('!'): plusminus(); break;
+        case ('='): equals(); break;
+
+        case ('Enter'): equals(); break;
+    };
+})
 
 </script>
 </html>
